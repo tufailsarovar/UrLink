@@ -1,4 +1,3 @@
-
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -12,12 +11,12 @@ const requiredInProduction = [
 
 export function validateEnv() {
   const missing = requiredInProduction.filter(
-    (key) => !process.env[key]?.trim()
+    (key) => !process.env[key]?.trim(),
   );
 
   if (process.env.NODE_ENV === "production" && missing.length > 0) {
     throw new Error(
-      `Missing required production environment variables: ${missing.join(", ")}`
+      `Missing required production environment variables: ${missing.join(", ")}`,
     );
   }
 }
@@ -33,7 +32,7 @@ export const env = Object.freeze({
   FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL || "",
   FIREBASE_PRIVATE_KEY: (process.env.FIREBASE_PRIVATE_KEY || "").replace(
     /\\n/g,
-    "\n"
+    "\n",
   ),
 
   ADMIN_EMAILS: (process.env.ADMIN_EMAILS || "")
