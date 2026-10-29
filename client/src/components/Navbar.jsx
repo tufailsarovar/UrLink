@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   AppBar,
@@ -113,8 +112,7 @@ export default function Navbar() {
   const isActive = (path) =>
     path === "/"
       ? location.pathname === "/"
-      : location.pathname === path ||
-        location.pathname.startsWith(`${path}/`);
+      : location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   const openMenu = (event, section) => {
     setMenuAnchor({
@@ -185,7 +183,6 @@ export default function Navbar() {
                 color: "inherit",
               }}
             >
-
               <Box
                 component="img"
                 src="/urlink_name.png"
@@ -215,18 +212,15 @@ export default function Navbar() {
             >
               {sections.map((section) => {
                 const activeSection = section.links.some((item) =>
-                  isActive(item.to)
+                  isActive(item.to),
                 );
 
-                const opened =
-                  menuAnchor?.section === section.title;
+                const opened = menuAnchor?.section === section.title;
 
                 return (
                   <Box key={section.title}>
                     <Button
-                      onClick={(event) =>
-                        openMenu(event, section.title)
-                      }
+                      onClick={(event) => openMenu(event, section.title)}
                       endIcon={
                         <ExpandMoreRounded
                           sx={{
@@ -244,13 +238,8 @@ export default function Navbar() {
                         px: 1.3,
                         py: 1.05,
                         borderRadius: "12px",
-                        color:
-                          opened || activeSection
-                            ? "#111111"
-                            : "#52525B",
-                        bgcolor: opened
-                          ? "#F4F4F5"
-                          : "transparent",
+                        color: opened || activeSection ? "#111111" : "#52525B",
+                        bgcolor: opened ? "#F4F4F5" : "transparent",
                         fontSize: 12.5,
                         fontWeight: 750,
                         textTransform: "none",
@@ -273,11 +262,7 @@ export default function Navbar() {
                     </Button>
 
                     <Menu
-                      anchorEl={
-                        opened
-                          ? menuAnchor.currentTarget
-                          : null
-                      }
+                      anchorEl={opened ? menuAnchor.currentTarget : null}
                       open={opened}
                       onClose={closeMenu}
                       anchorOrigin={{
@@ -296,20 +281,16 @@ export default function Navbar() {
                             p: 0.8,
                             border: `1px solid ${borderColor}`,
                             borderRadius: "16px",
-                            boxShadow:
-                              "0 18px 50px rgba(0,0,0,0.12)",
-                            animation:
-                              "urlinkMenuIn 160ms ease-out",
+                            boxShadow: "0 18px 50px rgba(0,0,0,0.12)",
+                            animation: "urlinkMenuIn 160ms ease-out",
                             "@keyframes urlinkMenuIn": {
                               from: {
                                 opacity: 0,
-                                transform:
-                                  "translateY(-5px) scale(.98)",
+                                transform: "translateY(-5px) scale(.98)",
                               },
                               to: {
                                 opacity: 1,
-                                transform:
-                                  "translateY(0) scale(1)",
+                                transform: "translateY(0) scale(1)",
                               },
                             },
                           },
@@ -329,9 +310,7 @@ export default function Navbar() {
                             mb: 0.25,
                             borderRadius: "10px",
                             fontSize: 12.5,
-                            fontWeight: isActive(item.to)
-                              ? 750
-                              : 550,
+                            fontWeight: isActive(item.to) ? 750 : 550,
                             "&.Mui-selected": {
                               bgcolor: "#F4F4F5",
                               color: "#111111",
@@ -374,8 +353,7 @@ export default function Navbar() {
                   boxShadow: "0 5px 14px rgba(0,0,0,0.13)",
                   "&:hover": {
                     bgcolor: "#303030",
-                    boxShadow:
-                      "0 9px 22px rgba(0,0,0,0.18)",
+                    boxShadow: "0 9px 22px rgba(0,0,0,0.18)",
                     transform: "translateY(-2px)",
                   },
                   "&:active": {
@@ -393,17 +371,14 @@ export default function Navbar() {
               <>
                 <Tooltip title="Account menu">
                   <IconButton
-                    onClick={(event) =>
-                      openMenu(event, "account")
-                    }
+                    onClick={(event) => openMenu(event, "account")}
                     aria-label="Open account menu"
                     sx={{
                       ml: { xs: 0, md: 1.5 },
                       p: "3px",
                       border: "1px solid #D4D4D8",
                       borderRadius: "50%",
-                      transition:
-                        "transform 180ms ease, box-shadow 180ms ease",
+                      transition: "transform 180ms ease, box-shadow 180ms ease",
                       "&:hover": {
                         transform: "scale(1.06)",
                         boxShadow: "0 0 0 4px #F4F4F5",
@@ -422,9 +397,7 @@ export default function Navbar() {
                         fontWeight: 800,
                       }}
                     >
-                      {user.displayName
-                        ?.charAt(0)
-                        ?.toUpperCase() || "U"}
+                      {user.displayName?.charAt(0)?.toUpperCase() || "U"}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
@@ -453,27 +426,17 @@ export default function Navbar() {
                         maxWidth: "calc(100vw - 24px)",
                         border: `1px solid ${borderColor}`,
                         borderRadius: "16px",
-                        boxShadow:
-                          "0 18px 50px rgba(0,0,0,0.12)",
+                        boxShadow: "0 18px 50px rgba(0,0,0,0.12)",
                       },
                     },
                   }}
                 >
                   <Box sx={{ px: 2, py: 1.7, minWidth: 0 }}>
-                    <Typography
-                      fontWeight={800}
-                      fontSize={14}
-                      noWrap
-                    >
+                    <Typography fontWeight={800} fontSize={14} noWrap>
                       {user.displayName || "URLINK User"}
                     </Typography>
 
-                    <Typography
-                      fontSize={12}
-                      color={MUTED}
-                      mt={0.4}
-                      noWrap
-                    >
+                    <Typography fontSize={12} color={MUTED} mt={0.4} noWrap>
                       {user.email}
                     </Typography>
                   </Box>
@@ -486,9 +449,7 @@ export default function Navbar() {
                     onClick={closeMenu}
                     sx={{ py: 1.2 }}
                   >
-                    <DashboardRounded
-                      sx={{ mr: 1.2, fontSize: 19 }}
-                    />
+                    <DashboardRounded sx={{ mr: 1.2, fontSize: 19 }} />
                     Dashboard
                   </MenuItem>
 
@@ -496,9 +457,7 @@ export default function Navbar() {
                     onClick={handleLogout}
                     sx={{ py: 1.2, color: "#DC2626" }}
                   >
-                    <LogoutRounded
-                      sx={{ mr: 1.2, fontSize: 19 }}
-                    />
+                    <LogoutRounded sx={{ mr: 1.2, fontSize: 19 }} />
                     Sign out
                   </MenuItem>
                 </Menu>
@@ -556,6 +515,7 @@ export default function Navbar() {
           }}
         >
           {/* Mobile drawer header */}
+
           <Box
             sx={{
               display: "flex",
@@ -573,26 +533,21 @@ export default function Navbar() {
                 alignItems: "center",
                 gap: 1,
                 textDecoration: "none",
+                minWidth: 0,
               }}
             >
               <Box
+                component="img"
+                src="/logo.png"
+                alt="URLINK Logo"
                 sx={{
-                  width: 32,
-                  height: 32,
-                  display: "grid",
-                  placeItems: "center",
-                  bgcolor: "#111111",
-                  color: "#FFFFFF",
-                  borderRadius: "10px",
+                  width: 34,
+                  height: 34,
+                  objectFit: "contain",
+                  flexShrink: 0,
+                  display: "block",
                 }}
-              >
-                <LinkRounded
-                  sx={{
-                    fontSize: 20,
-                    transform: "rotate(-35deg)",
-                  }}
-                />
-              </Box>
+              />
 
               <Box
                 component="img"
@@ -600,9 +555,11 @@ export default function Navbar() {
                 alt="URLINK"
                 sx={{
                   width: 120,
+                  maxWidth: "100%",
                   height: 34,
                   objectFit: "contain",
                   objectPosition: "left center",
+                  display: "block",
                 }}
               />
             </Box>
@@ -610,6 +567,7 @@ export default function Navbar() {
             <IconButton
               onClick={closeDrawer}
               aria-label="Close navigation menu"
+              sx={{ flexShrink: 0 }}
             >
               <CloseRounded />
             </IconButton>
@@ -656,11 +614,10 @@ export default function Navbar() {
           {/* Expandable navigation sections */}
           <List disablePadding sx={{ flex: 1 }}>
             {sections.map((section, sectionIndex) => {
-              const expanded =
-                expandedSection === section.title;
+              const expanded = expandedSection === section.title;
 
               const sectionActive = section.links.some((item) =>
-                isActive(item.to)
+                isActive(item.to),
               );
 
               return (
@@ -674,9 +631,7 @@ export default function Navbar() {
                   }}
                   sx={{
                     mb: 1,
-                    border: `1px solid ${
-                      expanded ? "#D4D4D8" : borderColor
-                    }`,
+                    border: `1px solid ${expanded ? "#D4D4D8" : borderColor}`,
                     borderRadius: "14px",
                     bgcolor: expanded ? "#FAFAFA" : "#FFFFFF",
                     overflow: "hidden",
@@ -686,19 +641,14 @@ export default function Navbar() {
                 >
                   <ListItemButton
                     onClick={() =>
-                      setExpandedSection(
-                        expanded ? null : section.title
-                      )
+                      setExpandedSection(expanded ? null : section.title)
                     }
                     aria-expanded={expanded}
                     sx={{
                       minHeight: 52,
                       px: 1.5,
                       gap: 1.2,
-                      color:
-                        expanded || sectionActive
-                          ? "#18181B"
-                          : "#3F3F46",
+                      color: expanded || sectionActive ? "#18181B" : "#3F3F46",
                     }}
                   >
                     <Box
@@ -724,23 +674,15 @@ export default function Navbar() {
                     <ExpandMoreRounded
                       sx={{
                         color: MUTED,
-                        transform: expanded
-                          ? "rotate(180deg)"
-                          : "rotate(0deg)",
+                        transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
                         transition: "transform 200ms ease",
                       }}
                     />
                   </ListItemButton>
 
-                  <Collapse
-                    in={expanded}
-                    timeout={220}
-                    unmountOnExit
-                  >
+                  <Collapse in={expanded} timeout={220} unmountOnExit>
                     <Box sx={{ px: 1.1, pb: 1.1 }}>
-                      <Divider
-                        sx={{ mb: 0.7, borderColor }}
-                      />
+                      <Divider sx={{ mb: 0.7, borderColor }} />
 
                       <AnimatePresence initial={false}>
                         {section.links.map((item, index) => (
@@ -796,25 +738,15 @@ export default function Navbar() {
                     fontWeight: 800,
                   }}
                 >
-                  {user.displayName
-                    ?.charAt(0)
-                    ?.toUpperCase() || "U"}
+                  {user.displayName?.charAt(0)?.toUpperCase() || "U"}
                 </Avatar>
 
                 <Box sx={{ minWidth: 0 }}>
-                  <Typography
-                    fontSize={13}
-                    fontWeight={800}
-                    noWrap
-                  >
+                  <Typography fontSize={13} fontWeight={800} noWrap>
                     {user.displayName || "URLINK User"}
                   </Typography>
 
-                  <Typography
-                    fontSize={11}
-                    color={MUTED}
-                    noWrap
-                  >
+                  <Typography fontSize={11} color={MUTED} noWrap>
                     {user.email}
                   </Typography>
                 </Box>
@@ -879,8 +811,7 @@ export default function Navbar() {
                     fontSize: 13,
                     fontWeight: 800,
                     textTransform: "none",
-                    boxShadow:
-                      "0 5px 15px rgba(0,0,0,0.13)",
+                    boxShadow: "0 5px 15px rgba(0,0,0,0.13)",
                     "&:hover": {
                       bgcolor: "#303030",
                       transform: "translateY(-1px)",

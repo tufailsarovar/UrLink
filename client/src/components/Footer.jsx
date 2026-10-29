@@ -1,12 +1,21 @@
-
 import { useState } from "react";
 import {
-  Box, Container, Divider, IconButton, Link as MuiLink,
-  Stack, Typography, Collapse,
+  Box,
+  Container,
+  Divider,
+  IconButton,
+  Link as MuiLink,
+  Stack,
+  Typography,
+  Collapse,
 } from "@mui/material";
 import {
-  ExpandMoreRounded, HomeRounded, ExploreRounded,
-  InfoOutlined, GavelRounded, ContactSupportOutlined,
+  ExpandMoreRounded,
+  HomeRounded,
+  ExploreRounded,
+  InfoOutlined,
+  GavelRounded,
+  ContactSupportOutlined,
   KeyboardArrowUpRounded,
 } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
@@ -62,11 +71,10 @@ export default function Footer() {
   const isActive = (path) =>
     path === "/"
       ? location.pathname === "/"
-      : location.pathname === path ||
-        location.pathname.startsWith(`${path}/`);
+      : location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   const toggleSection = (title) =>
-    setExpanded((previous) => previous === title ? null : title);
+    setExpanded((previous) => (previous === title ? null : title));
 
   return (
     <Box
@@ -118,21 +126,20 @@ export default function Footer() {
               sx={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: { xs: 1, sm: 1.25 },
                 textDecoration: "none",
                 borderRadius: 2,
+                flexShrink: 0,
               }}
             >
-
               <Box
                 component="img"
                 src="/urlink_name.png"
                 alt="URLINK"
                 sx={{
                   display: "block",
-                  width: { xs: 108, sm: 138, md: 148 },
-                  height: { xs: 31, sm: 38 },
-                  maxWidth: "calc(100% - 45px)",
+                  width: { xs: 125, sm: 145, md: 160 },
+                  height: { xs: 36, sm: 40, md: 44 },
+                  maxWidth: "calc(100vw - 100px)",
                   objectFit: "contain",
                   objectPosition: "left center",
                 }}
@@ -149,9 +156,8 @@ export default function Footer() {
                 overflowWrap: "anywhere",
               }}
             >
-              Discover useful tools, AI resources, open-source
-              projects, websites, and career opportunities — all
-              in one place.
+              Discover useful tools, AI resources, open-source projects,
+              websites, and career opportunities — all in one place.
             </Typography>
 
             <Stack
@@ -161,7 +167,9 @@ export default function Footer() {
               sx={{ mt: 1.5, color: "#27272A" }}
             >
               <HomeRounded sx={{ fontSize: 16, flexShrink: 0 }} />
-              <Typography sx={{ fontSize: { xs: 10.5, sm: 11.5 }, fontWeight: 700 }}>
+              <Typography
+                sx={{ fontSize: { xs: 10.5, sm: 11.5 }, fontWeight: 700 }}
+              >
                 Your directory for discovering more
               </Typography>
             </Stack>
@@ -183,9 +191,7 @@ export default function Footer() {
           >
             {footerSections.map((section, sectionIndex) => {
               const open = expanded === section.title;
-              const active = section.links.some((item) =>
-                isActive(item.to)
-              );
+              const active = section.links.some((item) => isActive(item.to));
 
               return (
                 <MotionBox
@@ -238,11 +244,23 @@ export default function Footer() {
                       },
                     }}
                   >
-                    <Box sx={{ display: "grid", placeItems: "center", "& svg": { fontSize: 19 } }}>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        placeItems: "center",
+                        "& svg": { fontSize: 19 },
+                      }}
+                    >
                       {section.icon}
                     </Box>
 
-                    <Typography sx={{ flex: 1, fontSize: { xs: 12, sm: 12.5 }, fontWeight: 800 }}>
+                    <Typography
+                      sx={{
+                        flex: 1,
+                        fontSize: { xs: 12, sm: 12.5 },
+                        fontWeight: 800,
+                      }}
+                    >
                       {section.title}
                     </Typography>
 
@@ -268,7 +286,10 @@ export default function Footer() {
                             initial={{ opacity: 0, x: -6 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.17, delay: index * 0.025 }}
+                            transition={{
+                              duration: 0.17,
+                              delay: index * 0.025,
+                            }}
                           >
                             <MuiLink
                               component={RouterLink}
@@ -285,7 +306,8 @@ export default function Footer() {
                                 fontSize: { xs: 11.5, sm: 12 },
                                 fontWeight: isActive(item.to) ? 800 : 500,
                                 lineHeight: 1.5,
-                                transition: "color 160ms ease, transform 160ms ease",
+                                transition:
+                                  "color 160ms ease, transform 160ms ease",
                                 "&:hover": {
                                   color: "#000000",
                                   transform: "translateX(3px)",
@@ -339,13 +361,21 @@ export default function Footer() {
             alignItems="center"
             flexWrap="wrap"
             gap={{ xs: 1, sm: 1.4 }}
-            sx={{ minWidth: 0, maxWidth: "100%", width: { xs: "100%", sm: "auto" } }}
+            sx={{
+              minWidth: 0,
+              maxWidth: "100%",
+              width: { xs: "100%", sm: "auto" },
+            }}
           >
             <MuiLink
               component={RouterLink}
               to="/terms"
               underline="none"
-              sx={{ fontSize: { xs: 10.5, sm: 11.5 }, color: MUTED, "&:hover": { color: "#000" } }}
+              sx={{
+                fontSize: { xs: 10.5, sm: 11.5 },
+                color: MUTED,
+                "&:hover": { color: "#000" },
+              }}
             >
               Terms
             </MuiLink>
@@ -356,7 +386,11 @@ export default function Footer() {
               component={RouterLink}
               to="/privacy"
               underline="none"
-              sx={{ fontSize: { xs: 10.5, sm: 11.5 }, color: MUTED, "&:hover": { color: "#000" } }}
+              sx={{
+                fontSize: { xs: 10.5, sm: 11.5 },
+                color: MUTED,
+                "&:hover": { color: "#000" },
+              }}
             >
               Privacy
             </MuiLink>
