@@ -1,4 +1,3 @@
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
@@ -70,8 +69,7 @@ function extractPagination(response, itemCount, page) {
 
   return {
     totalItems: Number.isFinite(total) ? total : itemCount,
-    totalPages:
-      Number.isFinite(totalPages) && totalPages > 0 ? totalPages : 1,
+    totalPages: Number.isFinite(totalPages) && totalPages > 0 ? totalPages : 1,
     limit: Number.isFinite(limit) && limit > 0 ? limit : PAGE_SIZE,
     page: Number(meta.page ?? page) || page,
   };
@@ -840,9 +838,7 @@ export default function Home() {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchRounded
-                        sx={{ fontSize: 19, color: "#8B83A2" }}
-                      />
+                      <SearchRounded sx={{ fontSize: 19, color: "#8B83A2" }} />
                     </InputAdornment>
                   ),
                 }}
@@ -875,9 +871,43 @@ export default function Home() {
                 select
                 fullWidth
                 size="small"
-                value={category}
+                value={category || ""}
                 onChange={handleCategoryChange}
                 aria-label="Filter by category"
+                SelectProps={{
+                  displayEmpty: true,
+                  renderValue: (selected) => {
+                    if (!selected) {
+                      return "All categories";
+                    }
+
+                    return (
+                      categoryOptions.find((item) => item.value === selected)
+                        ?.name || "All categories"
+                    );
+                  },
+                  MenuProps: {
+                    PaperProps: {
+                      sx: {
+                        mt: 0.5,
+                        borderRadius: "12px",
+                        border: "1px solid #E9E2FA",
+                        boxShadow: "0 8px 24px rgba(30, 20, 60, 0.12)",
+                        "& .MuiMenuItem-root": {
+                          fontSize: 12,
+                          minHeight: 38,
+                          "&.Mui-selected": {
+                            bgcolor: "#F1EDFF",
+                            color: "#6C4CF1",
+                          },
+                          "&.Mui-selected:hover": {
+                            bgcolor: "#E9E1FF",
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
                 sx={{
                   minWidth: 0,
                   "& .MuiOutlinedInput-root": {
@@ -885,10 +915,32 @@ export default function Home() {
                     borderRadius: "9px",
                     bgcolor: "#FAF9FF",
                     fontSize: 11,
+                    color: "#25213C",
+                    "& fieldset": {
+                      borderColor: "#D8D2E5",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#B9A4FF",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#6C4CF1",
+                      borderWidth: "1.5px",
+                    },
+                  },
+                  "& .MuiSelect-select": {
+                    display: "flex",
+                    alignItems: "center",
+                    minHeight: "0 !important",
+                    py: "9px",
+                    boxSizing: "border-box",
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: "#7C7297",
                   },
                 }}
               >
                 <MenuItem value="">All categories</MenuItem>
+
                 {categoryOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.name}

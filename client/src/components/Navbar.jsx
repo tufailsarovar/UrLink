@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 import {
-  Button,
   AppBar,
   Avatar,
   Box,
+  Button,
+  Collapse,
   Container,
   Divider,
   Drawer,
@@ -15,21 +17,21 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-  Collapse,
 } from "@mui/material";
 import {
-  DashboardRounded,
-  LogoutRounded,
-  ExploreRounded,
-  InfoOutlined,
-  GavelRounded,
-  ContactSupportOutlined,
-  ExpandMoreRounded,
-  MenuRounded,
-  CloseRounded,
-  HomeRounded,
   ArrowForwardRounded,
   AutoAwesomeRounded,
+  DashboardRounded,
+  ExpandMoreRounded,
+  ExploreRounded,
+  GavelRounded,
+  HomeRounded,
+  InfoOutlined,
+  ContactSupportOutlined,
+  LogoutRounded,
+  MenuRounded,
+  CloseRounded,
+  LinkRounded,
 } from "@mui/icons-material";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -76,6 +78,9 @@ const sections = [
   },
 ];
 
+const MUTED = "#71717A";
+const borderColor = "rgba(24,24,27,0.09)";
+
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
   const location = useLocation();
@@ -83,15 +88,18 @@ export default function Navbar() {
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [expandedSection, setExpandedSection] = useState(null);
+  const [expandedSection, setExpandedSection] = useState("Explore");
 
   const closeDrawer = () => {
     setDrawerOpen(false);
-    setExpandedSection(null);
+    setExpandedSection("Explore");
   };
 
+  const closeMenu = () => setMenuAnchor(null);
+
   const handleLogout = async () => {
-    setMenuAnchor(null);
+    closeMenu();
+    closeDrawer();
 
     try {
       await logout();
@@ -105,40 +113,35 @@ export default function Navbar() {
   const isActive = (path) =>
     path === "/"
       ? location.pathname === "/"
-      : location.pathname === path || location.pathname.startsWith(`${path}/`);
+      : location.pathname === path ||
+        location.pathname.startsWith(`${path}/`);
 
-  const renderSectionLinks = (section, mobile = false) =>
-    section.links.map((item) => {
-      const active = isActive(item.to);
-
-      return (
-        <Box
-          key={`${section.title}-${item.label}`}
-          component={NavLink}
-          to={item.to}
-          onClick={mobile ? closeDrawer : () => {}}
-          sx={{
-            display: "block",
-            px: mobile ? 1.5 : 1.6,
-            py: mobile ? 1.25 : 1.1,
-            mb: 0.3,
-            borderRadius: "10px",
-            color: active ? "#8052D6" : "#716980",
-            bgcolor: active ? "#F4EEFF" : "transparent",
-            textDecoration: "none",
-            fontSize: 12.5,
-            fontWeight: active ? 800 : 600,
-            transition: "background 180ms ease, color 180ms ease",
-            "&:hover": {
-              bgcolor: "#F5F0FF",
-              color: "#8052D6",
-            },
-          }}
-        >
-          {item.label}
-        </Box>
-      );
+  const openMenu = (event, section) => {
+    setMenuAnchor({
+      currentTarget: event.currentTarget,
+      section,
     });
+  };
+
+  const navLinkSx = (active) => ({
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+    px: 1.45,
+    py: 1.05,
+    borderRadius: "12px",
+    color: active ? "#111111" : "#52525B",
+    bgcolor: active ? "#F4F4F5" : "transparent",
+    textDecoration: "none",
+    fontSize: 12.5,
+    fontWeight: active ? 800 : 650,
+    transition: "all 180ms ease",
+    "&:hover": {
+      bgcolor: "#F4F4F5",
+      color: "#09090B",
+      transform: "translateY(-1px)",
+    },
+  });
 
   return (
     <>
@@ -147,9 +150,11 @@ export default function Navbar() {
         elevation={0}
         color="inherit"
         sx={{
-          bgcolor: "rgba(255,255,255,0.96)",
-          backdropFilter: "blur(18px)",
-          borderBottom: "1px solid #EEEAF5",
+          bgcolor: "rgba(255,255,255,0.88)",
+          backdropFilter: "saturate(180%) blur(20px)",
+          WebkitBackdropFilter: "saturate(180%) blur(20px)",
+          borderBottom: `1px solid ${borderColor}`,
+          color: "#18181B",
           zIndex: (theme) => theme.zIndex.appBar,
         }}
       >
@@ -157,10 +162,9 @@ export default function Navbar() {
           <Toolbar
             disableGutters
             sx={{
-              minHeight: { xs: 64, sm: 72, md: 78 },
+              minHeight: { xs: 64, sm: 72 },
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
               gap: { xs: 1, md: 2 },
             }}
           >
@@ -171,23 +175,25 @@ export default function Navbar() {
               aria-label="URLINK home"
               onClick={closeDrawer}
               sx={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                flex: { xs: "1 1 auto", md: "0 0 auto" },
+                gap: 1.15,
+                flex: "0 0 auto",
                 minWidth: 0,
-                ml: { xs: 1.5, sm: 2.5, md: 4 },
+                mr: { xs: "auto", md: 2 },
                 textDecoration: "none",
+                color: "inherit",
               }}
             >
+
               <Box
                 component="img"
-                src="/urlink.png"
+                src="/urlink_name.png"
                 alt="URLINK"
                 sx={{
                   display: "block",
-                  width: { xs: 140, sm: 175, md: 205 },
-                  height: { xs: 42, sm: 48, md: 54 },
-                  maxWidth: "100%",
+                  width: { xs: 112, sm: 132, md: 145 },
+                  height: { xs: 34, sm: 38 },
                   objectFit: "contain",
                   objectPosition: "left center",
                   userSelect: "none",
@@ -196,193 +202,229 @@ export default function Navbar() {
               />
             </Box>
 
-            {/* Desktop navigation aligned to the right */}
+            {/* Desktop navigation */}
             <Box
               component="nav"
               aria-label="Main navigation"
               sx={{
                 display: { xs: "none", md: "flex" },
                 alignItems: "center",
-                justifyContent: "flex-end",
-                gap: 0.5,
+                gap: 0.4,
                 ml: "auto",
-                mr: 2,
               }}
             >
-              {sections.map((section) => (
-                <Box key={section.title} sx={{ position: "relative" }}>
-                  <Box
-                    component="button"
-                    type="button"
-                    onClick={(event) => {
-                      const button = event.currentTarget;
-                      const rect = button.getBoundingClientRect();
-                      setMenuAnchor({
-                        currentTarget: button,
-                        section: section.title,
-                        rect,
-                      });
-                    }}
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 0.7,
-                      px: 1.2,
-                      py: 1.1,
-                      border: 0,
-                      borderRadius: "10px",
-                      bgcolor:
-                        menuAnchor?.section === section.title
-                          ? "#F4EEFF"
-                          : "transparent",
-                      color: "#655C76",
-                      cursor: "pointer",
-                      font: "inherit",
-                      whiteSpace: "nowrap",
-                      "&:hover": {
-                        bgcolor: "#F6F2FF",
-                        color: "#8052D6",
-                      },
-                    }}
-                  >
-                    <Box sx={{ display: "grid", placeItems: "center" }}>
-                      {section.icon}
-                    </Box>
+              {sections.map((section) => {
+                const activeSection = section.links.some((item) =>
+                  isActive(item.to)
+                );
 
-                    <Typography
-                      component="span"
-                      sx={{ fontSize: 12.5, fontWeight: 750 }}
+                const opened =
+                  menuAnchor?.section === section.title;
+
+                return (
+                  <Box key={section.title}>
+                    <Button
+                      onClick={(event) =>
+                        openMenu(event, section.title)
+                      }
+                      endIcon={
+                        <ExpandMoreRounded
+                          sx={{
+                            fontSize: 17,
+                            transform: opened
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                            transition: "transform 180ms ease",
+                          }}
+                        />
+                      }
+                      startIcon={section.icon}
+                      sx={{
+                        minWidth: 0,
+                        px: 1.3,
+                        py: 1.05,
+                        borderRadius: "12px",
+                        color:
+                          opened || activeSection
+                            ? "#111111"
+                            : "#52525B",
+                        bgcolor: opened
+                          ? "#F4F4F5"
+                          : "transparent",
+                        fontSize: 12.5,
+                        fontWeight: 750,
+                        textTransform: "none",
+                        "& .MuiButton-startIcon": {
+                          mr: 0.65,
+                          "& svg": { fontSize: 18 },
+                        },
+                        "& .MuiButton-endIcon": {
+                          ml: 0.35,
+                          mr: -0.2,
+                        },
+                        "&:hover": {
+                          bgcolor: "#F4F4F5",
+                          transform: "translateY(-1px)",
+                        },
+                        transition: "all 180ms ease",
+                      }}
                     >
                       {section.title}
-                    </Typography>
+                    </Button>
 
-                    <ExpandMoreRounded
-                      sx={{
-                        fontSize: 17,
-                        transform:
-                          menuAnchor?.section === section.title
-                            ? "rotate(180deg)"
-                            : "none",
-                        transition: "transform 180ms ease",
+                    <Menu
+                      anchorEl={
+                        opened
+                          ? menuAnchor.currentTarget
+                          : null
+                      }
+                      open={opened}
+                      onClose={closeMenu}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
                       }}
-                    />
-                  </Box>
-
-                  <Menu
-                    anchorEl={
-                      menuAnchor?.section === section.title
-                        ? menuAnchor.currentTarget
-                        : null
-                    }
-                    open={menuAnchor?.section === section.title}
-                    onClose={() => setMenuAnchor(null)}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                    slotProps={{
-                      paper: {
-                        sx: {
-                          mt: 1,
-                          minWidth: 210,
-                          p: 0.8,
-                          border: "1px solid #EEE8F7",
-                          borderRadius: "14px",
-                          boxShadow: "0 12px 35px rgba(45,30,70,0.12)",
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                      slotProps={{
+                        paper: {
+                          sx: {
+                            mt: 1,
+                            minWidth: 220,
+                            p: 0.8,
+                            border: `1px solid ${borderColor}`,
+                            borderRadius: "16px",
+                            boxShadow:
+                              "0 18px 50px rgba(0,0,0,0.12)",
+                            animation:
+                              "urlinkMenuIn 160ms ease-out",
+                            "@keyframes urlinkMenuIn": {
+                              from: {
+                                opacity: 0,
+                                transform:
+                                  "translateY(-5px) scale(.98)",
+                              },
+                              to: {
+                                opacity: 1,
+                                transform:
+                                  "translateY(0) scale(1)",
+                              },
+                            },
+                          },
                         },
-                      },
-                    }}
-                  >
-                    {section.links.map((item) => (
-                      <MenuItem
-                        key={item.label}
-                        component={Link}
-                        to={item.to}
-                        onClick={() => setMenuAnchor(null)}
-                        sx={{
-                          py: 1.2,
-                          borderRadius: "9px",
-                          fontSize: 12.5,
-                          color: isActive(item.to) ? "#8052D6" : "#625A72",
-                          "&:hover": { bgcolor: "#F5F0FF" },
-                        }}
-                      >
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </Box>
-              ))}
+                      }}
+                    >
+                      {section.links.map((item) => (
+                        <MenuItem
+                          key={item.label}
+                          component={Link}
+                          to={item.to}
+                          onClick={closeMenu}
+                          selected={isActive(item.to)}
+                          sx={{
+                            py: 1.2,
+                            px: 1.4,
+                            mb: 0.25,
+                            borderRadius: "10px",
+                            fontSize: 12.5,
+                            fontWeight: isActive(item.to)
+                              ? 750
+                              : 550,
+                            "&.Mui-selected": {
+                              bgcolor: "#F4F4F5",
+                              color: "#111111",
+                            },
+                            "&:hover": {
+                              bgcolor: "#F4F4F5",
+                            },
+                          }}
+                        >
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Box>
+                );
+              })}
             </Box>
 
+            {/* Login button */}
             {!loading && !user && (
               <Button
                 component={Link}
                 to="/login"
                 variant="contained"
+                endIcon={<ArrowForwardRounded />}
                 sx={{
-                  display: { xs: "none", md: "inline-flex" },
-                  position: "relative",
-                  overflow: "hidden",
-                  px: 2.6,
+                  display: {
+                    xs: "none",
+                    md: "inline-flex",
+                  },
+                  ml: 1.5,
+                  px: 2.2,
                   py: 1.05,
                   borderRadius: "12px",
-                  bgcolor: "#8052D6",
+                  bgcolor: "#111111",
                   color: "#FFFFFF",
-                  fontSize: 13,
+                  fontSize: 12.5,
                   fontWeight: 800,
                   textTransform: "none",
-                  boxShadow: "0 5px 15px rgba(128,82,214,0.2)",
-                  transition: "all 220ms ease",
+                  boxShadow: "0 5px 14px rgba(0,0,0,0.13)",
                   "&:hover": {
-                    bgcolor: "#6E43C1",
-                    boxShadow: "0 8px 22px rgba(128,82,214,0.3)",
+                    bgcolor: "#303030",
+                    boxShadow:
+                      "0 9px 22px rgba(0,0,0,0.18)",
                     transform: "translateY(-2px)",
                   },
                   "&:active": {
-                    transform: "scale(0.97)",
+                    transform: "scale(.97)",
                   },
+                  transition: "all 200ms ease",
                 }}
               >
-                Login
+                Get started
               </Button>
             )}
-            {/* Account menu on the right, when logged in */}
+
+            {/* Logged-in account menu */}
             {!loading && user && (
               <>
                 <Tooltip title="Account menu">
                   <IconButton
                     onClick={(event) =>
-                      setMenuAnchor({
-                        currentTarget: event.currentTarget,
-                        section: "account",
-                      })
+                      openMenu(event, "account")
                     }
                     aria-label="Open account menu"
                     sx={{
+                      ml: { xs: 0, md: 1.5 },
                       p: "3px",
-                      flexShrink: 0,
-                      border: "2px solid #E5D9FC",
+                      border: "1px solid #D4D4D8",
                       borderRadius: "50%",
-                      mr: { xs: 0.5, md: 0 },
+                      transition:
+                        "transform 180ms ease, box-shadow 180ms ease",
+                      "&:hover": {
+                        transform: "scale(1.06)",
+                        boxShadow: "0 0 0 4px #F4F4F5",
+                      },
                     }}
                   >
                     <Avatar
                       src={user.photoURL || undefined}
                       alt={user.displayName || "User"}
                       sx={{
-                        width: { xs: 34, sm: 39 },
-                        height: { xs: 34, sm: 39 },
-                        bgcolor: "#8052D6",
+                        width: { xs: 34, sm: 38 },
+                        height: { xs: 34, sm: 38 },
+                        bgcolor: "#18181B",
+                        color: "#FFFFFF",
                         fontSize: 13,
                         fontWeight: 800,
                       }}
                     >
-                      {user.displayName?.charAt(0)?.toUpperCase() || "U"}
+                      {user.displayName
+                        ?.charAt(0)
+                        ?.toUpperCase() || "U"}
                     </Avatar>
                   </IconButton>
                 </Tooltip>
@@ -394,7 +436,7 @@ export default function Navbar() {
                       : null
                   }
                   open={menuAnchor?.section === "account"}
-                  onClose={() => setMenuAnchor(null)}
+                  onClose={closeMenu}
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right",
@@ -407,20 +449,31 @@ export default function Navbar() {
                     paper: {
                       sx: {
                         mt: 1.2,
-                        width: 270,
+                        width: 265,
                         maxWidth: "calc(100vw - 24px)",
-                        border: "1px solid #EEE8F7",
-                        borderRadius: "15px",
-                        boxShadow: "0 12px 35px rgba(45,30,70,0.14)",
+                        border: `1px solid ${borderColor}`,
+                        borderRadius: "16px",
+                        boxShadow:
+                          "0 18px 50px rgba(0,0,0,0.12)",
                       },
                     },
                   }}
                 >
-                  <Box sx={{ px: 2, py: 1.7 }}>
-                    <Typography fontWeight={800} fontSize={14} noWrap>
+                  <Box sx={{ px: 2, py: 1.7, minWidth: 0 }}>
+                    <Typography
+                      fontWeight={800}
+                      fontSize={14}
+                      noWrap
+                    >
                       {user.displayName || "URLINK User"}
                     </Typography>
-                    <Typography fontSize={12} color="#898397" mt={0.4} noWrap>
+
+                    <Typography
+                      fontSize={12}
+                      color={MUTED}
+                      mt={0.4}
+                      noWrap
+                    >
                       {user.email}
                     </Typography>
                   </Box>
@@ -430,34 +483,43 @@ export default function Navbar() {
                   <MenuItem
                     component={Link}
                     to="/admin"
-                    onClick={() => setMenuAnchor(null)}
+                    onClick={closeMenu}
+                    sx={{ py: 1.2 }}
                   >
-                    <DashboardRounded sx={{ mr: 1.3, fontSize: 19 }} />
+                    <DashboardRounded
+                      sx={{ mr: 1.2, fontSize: 19 }}
+                    />
                     Dashboard
                   </MenuItem>
 
-                  <MenuItem onClick={handleLogout} sx={{ color: "#DC2626" }}>
-                    <LogoutRounded sx={{ mr: 1.3, fontSize: 19 }} />
+                  <MenuItem
+                    onClick={handleLogout}
+                    sx={{ py: 1.2, color: "#DC2626" }}
+                  >
+                    <LogoutRounded
+                      sx={{ mr: 1.2, fontSize: 19 }}
+                    />
                     Sign out
                   </MenuItem>
                 </Menu>
               </>
             )}
 
-            {/* Hamburger menu on phones */}
+            {/* Mobile menu button */}
             <IconButton
               onClick={() => setDrawerOpen(true)}
               aria-label="Open navigation menu"
               sx={{
                 display: { xs: "inline-flex", md: "none" },
                 flexShrink: 0,
-                width: 39,
-                height: 39,
-                mr: { xs: 0.5, sm: 1 },
-                color: "#5F526F",
-                border: "1px solid #EEE8F7",
-                borderRadius: "11px",
-                "&:hover": { bgcolor: "#F5F0FF" },
+                width: 40,
+                height: 40,
+                ml: { xs: 0, md: 1 },
+                color: "#18181B",
+                border: `1px solid ${borderColor}`,
+                borderRadius: "12px",
+                bgcolor: "#FFFFFF",
+                "&:hover": { bgcolor: "#F4F4F5" },
               }}
             >
               <MenuRounded />
@@ -466,7 +528,7 @@ export default function Navbar() {
         </Container>
       </AppBar>
 
-      {/* Mobile navigation drawer */}
+      {/* Animated mobile navigation drawer */}
       <Drawer
         anchor="right"
         open={drawerOpen}
@@ -474,44 +536,73 @@ export default function Navbar() {
         slotProps={{
           paper: {
             sx: {
-              width: "min(330px, 88vw)",
+              width: "min(360px, 91vw)",
               p: 2,
               bgcolor: "#FFFFFF",
               backgroundImage: "none",
+              borderLeft: `1px solid ${borderColor}`,
             },
           },
         }}
       >
         <MotionBox
-          initial={{ opacity: 0, x: 16 }}
+          initial={{ opacity: 0, x: 22 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.22 }}
-          sx={{ display: "flex", flexDirection: "column", minHeight: "100%" }}
+          transition={{ duration: 0.24, ease: "easeOut" }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100%",
+          }}
         >
+          {/* Mobile drawer header */}
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              mb: 2.5,
+              mb: 2,
             }}
           >
             <Box
               component={Link}
               to="/"
               onClick={closeDrawer}
-              sx={{ display: "flex", alignItems: "center" }}
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                textDecoration: "none",
+              }}
             >
               <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  display: "grid",
+                  placeItems: "center",
+                  bgcolor: "#111111",
+                  color: "#FFFFFF",
+                  borderRadius: "10px",
+                }}
+              >
+                <LinkRounded
+                  sx={{
+                    fontSize: 20,
+                    transform: "rotate(-35deg)",
+                  }}
+                />
+              </Box>
+
+              <Box
                 component="img"
-                src="/urlink.png"
+                src="/urlink_name.png"
                 alt="URLINK"
                 sx={{
-                  width: 155,
-                  height: 43,
+                  width: 120,
+                  height: 34,
                   objectFit: "contain",
                   objectPosition: "left center",
-                  pointerEvents: "none",
                 }}
               />
             </Box>
@@ -524,99 +615,150 @@ export default function Navbar() {
             </IconButton>
           </Box>
 
-          <Divider sx={{ mb: 2 }} />
+          {/* Intro panel */}
+          <Box
+            sx={{
+              p: 1.6,
+              mb: 2,
+              borderRadius: "16px",
+              bgcolor: "#F4F4F5",
+              border: `1px solid ${borderColor}`,
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: 15,
+                fontWeight: 850,
+                color: "#18181B",
+              }}
+            >
+              Find something useful.
+            </Typography>
 
+            <Typography
+              sx={{
+                mt: 0.45,
+                fontSize: 12,
+                lineHeight: 1.6,
+                color: MUTED,
+              }}
+            >
+              Explore resources, topics and helpful links on URLINK.
+            </Typography>
+
+            <AutoAwesomeRounded
+              sx={{ mt: 1, fontSize: 18, color: "#52525B" }}
+            />
+          </Box>
+
+          <Divider sx={{ mb: 1.8 }} />
+
+          {/* Expandable navigation sections */}
           <List disablePadding sx={{ flex: 1 }}>
-            {sections.map((section) => {
-              const isExpanded = expandedSection === section.title;
+            {sections.map((section, sectionIndex) => {
+              const expanded =
+                expandedSection === section.title;
+
+              const sectionActive = section.links.some((item) =>
+                isActive(item.to)
+              );
 
               return (
-                <Box
+                <MotionBox
                   key={section.title}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: sectionIndex * 0.045,
+                    duration: 0.2,
+                  }}
                   sx={{
                     mb: 1,
-                    border: "1px solid",
-                    borderColor: isExpanded ? "#DCCCF8" : "#F0ECF6",
+                    border: `1px solid ${
+                      expanded ? "#D4D4D8" : borderColor
+                    }`,
                     borderRadius: "14px",
-                    bgcolor: isExpanded ? "#FCFAFF" : "#FFFFFF",
+                    bgcolor: expanded ? "#FAFAFA" : "#FFFFFF",
                     overflow: "hidden",
+                    transition:
+                      "border-color 180ms ease, background 180ms ease",
                   }}
                 >
                   <ListItemButton
                     onClick={() =>
-                      setExpandedSection(isExpanded ? null : section.title)
+                      setExpandedSection(
+                        expanded ? null : section.title
+                      )
                     }
-                    aria-expanded={isExpanded}
+                    aria-expanded={expanded}
                     sx={{
-                      minHeight: 53,
+                      minHeight: 52,
                       px: 1.5,
-                      gap: 1.3,
-                      color: isExpanded ? "#8052D6" : "#302543",
+                      gap: 1.2,
+                      color:
+                        expanded || sectionActive
+                          ? "#18181B"
+                          : "#3F3F46",
                     }}
                   >
                     <Box
                       sx={{
                         display: "grid",
                         placeItems: "center",
-                        color: "#8052D6",
-                        "& svg": { fontSize: 20 },
+                        color: "#27272A",
                       }}
                     >
                       {section.icon}
                     </Box>
 
                     <Typography
-                      sx={{ flex: 1, fontSize: 13.5, fontWeight: 800 }}
+                      sx={{
+                        flex: 1,
+                        fontSize: 13,
+                        fontWeight: 800,
+                      }}
                     >
                       {section.title}
                     </Typography>
 
                     <ExpandMoreRounded
                       sx={{
-                        color: "#898397",
-                        transform: isExpanded ? "rotate(180deg)" : "none",
+                        color: MUTED,
+                        transform: expanded
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
                         transition: "transform 200ms ease",
                       }}
                     />
                   </ListItemButton>
 
-                  <Collapse in={isExpanded} timeout={230} unmountOnExit>
-                    <Box sx={{ px: 1.2, pb: 1.2 }}>
-                      <Divider sx={{ mb: 0.7, borderColor: "#EEE8F7" }} />
+                  <Collapse
+                    in={expanded}
+                    timeout={220}
+                    unmountOnExit
+                  >
+                    <Box sx={{ px: 1.1, pb: 1.1 }}>
+                      <Divider
+                        sx={{ mb: 0.7, borderColor }}
+                      />
+
                       <AnimatePresence initial={false}>
                         {section.links.map((item, index) => (
                           <MotionBox
                             key={item.label}
-                            initial={{ opacity: 0, x: -6 }}
+                            initial={{ opacity: 0, x: -7 }}
                             animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -5 }}
                             transition={{
-                              duration: 0.18,
-                              delay: index * 0.03,
+                              duration: 0.16,
+                              delay: index * 0.025,
                             }}
                           >
                             <Box
                               component={NavLink}
                               to={item.to}
                               onClick={closeDrawer}
-                              sx={{
-                                display: "block",
-                                px: 1.5,
-                                py: 1.1,
-                                borderRadius: "9px",
-                                color: isActive(item.to)
-                                  ? "#8052D6"
-                                  : "#716980",
-                                bgcolor: isActive(item.to)
-                                  ? "#F4EEFF"
-                                  : "transparent",
-                                textDecoration: "none",
-                                fontSize: 12.5,
-                                fontWeight: isActive(item.to) ? 800 : 550,
-                                "&:hover": {
-                                  bgcolor: "#F5F0FF",
-                                  color: "#8052D6",
-                                },
-                              }}
+                              sx={navLinkSx(isActive(item.to))}
                             >
                               {item.label}
                             </Box>
@@ -625,12 +767,13 @@ export default function Navbar() {
                       </AnimatePresence>
                     </Box>
                   </Collapse>
-                </Box>
+                </MotionBox>
               );
             })}
           </List>
 
-          {!loading && user && (
+          {/* Mobile account actions */}
+          {!loading && user ? (
             <Box sx={{ mt: 2 }}>
               <Divider sx={{ mb: 2 }} />
 
@@ -646,114 +789,124 @@ export default function Navbar() {
                 <Avatar
                   src={user.photoURL || undefined}
                   alt={user.displayName || "User"}
-                  sx={{ width: 38, height: 38, bgcolor: "#8052D6" }}
+                  sx={{
+                    width: 38,
+                    height: 38,
+                    bgcolor: "#18181B",
+                    fontWeight: 800,
+                  }}
                 >
-                  {user.displayName?.charAt(0)?.toUpperCase() || "U"}
+                  {user.displayName
+                    ?.charAt(0)
+                    ?.toUpperCase() || "U"}
                 </Avatar>
 
                 <Box sx={{ minWidth: 0 }}>
-                  <Typography fontSize={13} fontWeight={800} noWrap>
+                  <Typography
+                    fontSize={13}
+                    fontWeight={800}
+                    noWrap
+                  >
                     {user.displayName || "URLINK User"}
                   </Typography>
-                  <Typography fontSize={11} color="#898397" noWrap>
+
+                  <Typography
+                    fontSize={11}
+                    color={MUTED}
+                    noWrap
+                  >
                     {user.email}
                   </Typography>
                 </Box>
               </Box>
 
-              <Box
+              <Button
                 component={Link}
                 to="/admin"
                 onClick={closeDrawer}
+                fullWidth
+                startIcon={<DashboardRounded />}
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: 1.3,
-                  mb: 0.8,
-                  borderRadius: "11px",
-                  color: "#8052D6",
-                  bgcolor: "#F5F0FF",
-                  textDecoration: "none",
-                  fontSize: 13,
-                  fontWeight: 750,
+                  mb: 1,
+                  py: 1.15,
+                  borderRadius: "12px",
+                  bgcolor: "#F4F4F5",
+                  color: "#18181B",
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                  textTransform: "none",
+                  "&:hover": { bgcolor: "#E4E4E7" },
                 }}
               >
-                <DashboardRounded fontSize="small" />
                 Dashboard
-              </Box>
+              </Button>
 
-              <Box
-                component="button"
-                type="button"
+              <Button
                 onClick={handleLogout}
+                fullWidth
+                startIcon={<LogoutRounded />}
                 sx={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: 1.3,
-                  border: 0,
-                  borderRadius: "11px",
+                  py: 1.15,
+                  borderRadius: "12px",
                   color: "#DC2626",
-                  bgcolor: "transparent",
-                  font: "inherit",
-                  fontSize: 13,
-                  fontWeight: 750,
-                  cursor: "pointer",
-                  "&:hover": { bgcolor: "#FFF1F2" },
+                  fontSize: 12.5,
+                  fontWeight: 800,
+                  textTransform: "none",
+                  "&:hover": { bgcolor: "#FEF2F2" },
                 }}
               >
-                <LogoutRounded fontSize="small" />
                 Sign out
-              </Box>
+              </Button>
             </Box>
-          )}
-
-          {(!user || loading) && (
+          ) : (
             <Box sx={{ mt: "auto", pt: 2 }}>
-              <Divider sx={{ mb: 1.5 }} />
+              <Divider sx={{ mb: 1.8 }} />
+
+              {!loading && !user && (
+                <Button
+                  component={Link}
+                  to="/login"
+                  fullWidth
+                  variant="contained"
+                  onClick={closeDrawer}
+                  endIcon={<ArrowForwardRounded />}
+                  sx={{
+                    mb: 1.8,
+                    py: 1.3,
+                    borderRadius: "12px",
+                    bgcolor: "#111111",
+                    color: "#FFFFFF",
+                    fontSize: 13,
+                    fontWeight: 800,
+                    textTransform: "none",
+                    boxShadow:
+                      "0 5px 15px rgba(0,0,0,0.13)",
+                    "&:hover": {
+                      bgcolor: "#303030",
+                      transform: "translateY(-1px)",
+                    },
+                    transition: "all 180ms ease",
+                  }}
+                >
+                  Get started
+                </Button>
+              )}
+
               <Typography
                 sx={{
                   textAlign: "center",
-                  color: "#A09AAF",
+                  color: "#A1A1AA",
                   fontSize: 11,
                 }}
               >
                 <HomeRounded
-                  sx={{ fontSize: 13, verticalAlign: "middle", mr: 0.5 }}
+                  sx={{
+                    fontSize: 13,
+                    verticalAlign: "middle",
+                    mr: 0.5,
+                  }}
                 />
-                {!loading && !user && (
-                  <Button
-                    component={Link}
-                    to="/login"
-                    fullWidth
-                    variant="contained"
-                    onClick={closeDrawer}
-                    endIcon={<ArrowForwardRounded />}
-                    sx={{
-                      mb: 2,
-                      py: 1.3,
-                      borderRadius: "12px",
-                      bgcolor: "#8052D6",
-                      color: "#FFFFFF",
-                      fontSize: 13,
-                      fontWeight: 800,
-                      textTransform: "none",
-                      boxShadow: "0 5px 15px rgba(128,82,214,0.2)",
-                      "&:hover": {
-                        bgcolor: "#6E43C1",
-                        boxShadow: "0 8px 20px rgba(128,82,214,0.25)",
-                      },
-                      "&:active": {
-                        transform: "scale(0.98)",
-                      },
-                    }}
-                  >
-                    Login
-                  </Button>
-                )}
-                Discover what&apos;s useful.
+                Useful links, one place.
               </Typography>
             </Box>
           )}

@@ -26,6 +26,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext.jsx";
 
 const MotionPaper = motion.create(Paper);
+const MotionBox = motion.create(Box);
 
 const policyLinkSx = {
   color: "#6554F0",
@@ -249,43 +250,29 @@ export default function Login() {
           }}
         />
         <Box sx={{ p: { xs: 2.25, sm: 4 } }}>
-          <Stack alignItems="center" spacing={0.8} sx={{ mb: 2.5 }}>
+          <Stack spacing={1} alignItems="center" sx={{ mb: 3 }}>
             <Box
               component="img"
-              src="/logo.svg"
-              alt="urlink"
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
+              src="/logo.png"
+              alt="URLINK Logo"
               sx={{
-                width: 48,
-                height: 48,
+                width: 70,
+                height: 70,
                 objectFit: "contain",
-                borderRadius: 2,
               }}
             />
-            <Typography
-              component="h1"
+
+            <Box
+              component="img"
+              src="/urlink_name.png"
+              alt="URLINK"
               sx={{
-                fontSize: { xs: 23, sm: 27 },
-                fontWeight: 850,
-                letterSpacing: -0.6,
-                textAlign: "center",
-                color: "#19172D",
+                width: 180,
+                maxWidth: "100%",
+                height: "auto",
+                objectFit: "contain",
               }}
-            >
-              Welcome to urlink
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 12,
-                color: "#7B8498",
-                textAlign: "center",
-                lineHeight: 1.6,
-              }}
-            >
-              Sign in to discover and manage your resources.
-            </Typography>
+            />
           </Stack>
 
           <Box sx={{ mb: 2, p: 0.4, borderRadius: 2, bgcolor: "#F3F4F9" }}>
@@ -571,19 +558,6 @@ export default function Login() {
               Secure authentication · Protected access
             </Typography>
           </Stack>
-          <Typography
-            sx={{
-              mt: 1.5,
-              textAlign: "center",
-              color: "#9AA1B1",
-              fontSize: 10.5,
-            }}
-          >
-            Powered by{" "}
-            <Box component="span" sx={{ color: "#6554F0", fontWeight: 800 }}>
-              urlink.com
-            </Box>
-          </Typography>
         </Box>
       </MotionPaper>
     </Box>
